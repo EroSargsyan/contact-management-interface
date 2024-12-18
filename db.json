@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "username": "johndoe",
+      "description": "Software Developer",
+      "profilePicture": "https://via.placeholder.com/150"
+    }
+  ]
+}
