@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
     "@tanstack/react-form": "^0.40.4",
     "@tanstack/react-query": "^5.62.8",
     "@tanstack/react-router": "^1.91.2",
+    "@tanstack/zod-form-adapter": "^0.40.4",
     "axios": "^1.7.9",
     "json-server": "^1.0.0-beta.3",
     "react": "^18.3.1",
