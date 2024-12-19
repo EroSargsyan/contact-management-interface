@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchContactDetails } from '../../services/contactsService';
-import { Contact } from '../../types/contact';
+import { IContact } from '../../types/contact';
 
 interface ContactDetailsProps {
   selectedContactId: number | null;
@@ -9,7 +9,7 @@ interface ContactDetailsProps {
 const ContactDetails: React.FC<ContactDetailsProps> = ({
   selectedContactId,
 }) => {
-  const [contact, setContact] = useState<Contact | null>(null);
+  const [contact, setContact] = useState<IContact | null>(null);
 
   useEffect(() => {
     if (selectedContactId) {
