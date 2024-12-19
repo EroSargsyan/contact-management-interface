@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { IContact } from '../../types/contact';
 import { useNavigate } from 'react-router-dom';
+import { createContact } from '../../services/contactsService';
 
 const contactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -24,7 +25,7 @@ const CreateContactForm = () => {
       description: '',
       profilePicture: 'https://via.placeholder.com/150',
     } as IContact,
-    onSubmit: (formState) => {
+    onSubmit: async (formState) => {
       const { value } = formState;
       const validation = contactSchema.safeParse(value);
 
@@ -33,14 +34,22 @@ const CreateContactForm = () => {
           ...value,
           description: value.description || '',
           profilePicture: value.profilePicture || '',
-          id: Date.now(),
+          id: String(Date.now()),
         };
-        // onCreate(newContact); TODO
 
-        navigate(`/contacts/${newContact.id}`);
+        try {
+          const response = await createContact(newContact);
+
+          if (response.status === 201) {
+            navigate(`/contacts/${response.data.id}`);
+          } else {
+            console.error('Failed to add contact:', response);
+          }
+        } catch (error) {
+          console.error('Error while adding contact:', error);
+        }
       } else {
         console.error('Validation Errors:', validation.error.errors);
-        alert('Validation Failed! Check input fields.');
       }
     },
     validatorAdapter: zodValidator(),
@@ -60,11 +69,8 @@ const CreateContactForm = () => {
       <h3 className="text-lg font-bold text-gray-800">Create Contact</h3>
 
       <NameField form={form} />
-
       <UsernameField form={form} />
-
       <DescriptionField form={form} />
-
       <ProfilePictureField form={form} />
 
       <div className="flex justify-end space-x-4">
