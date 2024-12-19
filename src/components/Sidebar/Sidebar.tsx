@@ -1,28 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import SearchBar from './SearchBar';
 import ContactList from './ContactList';
-import CreateContactForm from '../ContactDetails/CreateContactForm';
 import { fetchContacts } from '../../services/contactsService';
+import { IContact } from '../../types/contact';
+import { useNavigate } from 'react-router-dom';
 
-interface Contact {
-  id: number;
-  name: string;
-  username: string;
-}
 
-interface SidebarProps {
-  selectedContactId: number | null;
-  onSelectContact: (id: number) => void;
-}
 
-const Sidebar: React.FC<SidebarProps> = ({
-  selectedContactId,
-  onSelectContact,
-}) => {
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [filteredContacts, setFilteredContacts] = useState<Contact[]>([]);
+const Sidebar = () => {
+  const [contacts, setContacts] = useState<IContact[]>([]);
+  const [filteredContacts, setFilteredContacts] = useState<IContact[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isCreating, setIsCreating] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadContacts = async () => {
@@ -45,33 +35,21 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [searchQuery, contacts]);
 
-  const handleAddContact = (newContact: Contact) => {
-    setContacts((prev) => [...prev, newContact]);
-    setFilteredContacts((prev) => [...prev, newContact]);
-    setIsCreating(false);
-  };
-
   return (
-    <aside className="w-64 bg-white shadow-md h-full">
+    <div className="h-full w-full bg-white shadow-lg flex flex-col p-4 space-y-4">
       <SearchBar onSearch={setSearchQuery} />
+
       <button
-        onClick={() => setIsCreating(true)}
-        className="bg-blue-500 text-white px-4 py-2 w-full rounded-md mb-4"
+        onClick={() => navigate('/create-contact')}
+        className="w-full bg-blue-500 text-white py-2 rounded-md shadow hover:bg-blue-600 transition"
       >
         Create Contact
       </button>
-      {isCreating && (
-        <CreateContactForm
-          onCreate={handleAddContact}
-          onCancel={() => setIsCreating(false)}
-        />
-      )}
-      <ContactList
-        contacts={filteredContacts}
-        selectedContactId={selectedContactId}
-        onSelectContact={onSelectContact}
-      />
-    </aside>
+
+      <div className="flex-1 overflow-y-auto">
+        <ContactList contacts={filteredContacts} />
+      </div>
+    </div>
   );
 };
 
