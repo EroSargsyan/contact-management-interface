@@ -7,7 +7,7 @@ interface ContactListProps {
 }
 
 const ContactList: React.FC<ContactListProps> = ({ contacts }) => {
-  const [selectedContactId, setSelectedContactId] = useState<number | null>(
+  const [selectedContactId, setSelectedContactId] = useState<string | null>(
     null,
   );
 
