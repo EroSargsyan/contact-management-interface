@@ -1,96 +1,168 @@
-import React, { useState } from 'react';
-import { createContact } from '../../services/contactsService';
-import { Contact } from '../../types/contact';
+import { useForm, useField, FormApi } from '@tanstack/react-form';
+import { z } from 'zod';
+import { zodValidator } from '@tanstack/zod-form-adapter';
+import { IContact } from '../../types/contact';
+import { useNavigate } from 'react-router-dom';
 
-interface CreateContactFormProps {
-  onCreate: (contact: Contact) => void;
-  onCancel: () => void;
-}
+const contactSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  username: z.string().min(1, 'Username is required'),
+  description: z.string().optional(),
+  profilePicture: z
+    .string()
+    .url('Profile picture URL must be a valid URL')
+    .optional(),
+});
 
-const CreateContactForm: React.FC<CreateContactFormProps> = ({
-  onCreate,
-  onCancel,
-}) => {
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [description, setDescription] = useState('');
-  const [profilePicture, setProfilePicture] = useState(
-    'https://via.placeholder.com/150',
-  );
+const CreateContactForm = () => {
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm({
+    defaultValues: {
+      name: '',
+      username: '',
+      description: '',
+      profilePicture: 'https://via.placeholder.com/150',
+    } as IContact,
+    onSubmit: (formState) => {
+      const { value } = formState;
+      const validation = contactSchema.safeParse(value);
 
-    const newContact = {
-      name,
-      username,
-      description,
-      profilePicture,
-    };
+      if (validation.success) {
+        const newContact: IContact = {
+          ...value,
+          description: value.description || '',
+          profilePicture: value.profilePicture || '',
+          id: Date.now(),
+        };
+        // onCreate(newContact); TODO
 
-    const createdContact = await createContact(newContact);
-    onCreate(createdContact);
-  };
+        navigate(`/contacts/${newContact.id}`);
+      } else {
+        console.error('Validation Errors:', validation.error.errors);
+        alert('Validation Failed! Check input fields.');
+      }
+    },
+    validatorAdapter: zodValidator(),
+    validators: {
+      onChange: contactSchema,
+    },
+  });
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className="p-4 bg-gray-100 rounded-md shadow-md"
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+      className="bg-gray-50 p-4 rounded-md shadow-md space-y-4 w-full"
     >
-      <h3 className="text-xl font-bold mb-4">Create Contact</h3>
-      <div className="mb-4">
-        <label className="block text-gray-700">Name</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="w-full px-4 py-2 border border-gray-300 rounded-md"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Username</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-          className="w-full px-4 py-2 border border-gray-300 rounded-md"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Profile Picture URL</label>
-        <input
-          type="text"
-          value={profilePicture}
-          onChange={(e) => setProfilePicture(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md"
-        />
-      </div>
+      <h3 className="text-lg font-bold text-gray-800">Create Contact</h3>
+
+      <NameField form={form} />
+
+      <UsernameField form={form} />
+
+      <DescriptionField form={form} />
+
+      <ProfilePictureField form={form} />
+
       <div className="flex justify-end space-x-4">
         <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 bg-gray-300 rounded-md"
-        >
-          Cancel
-        </button>
-        <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
         >
           Create
         </button>
       </div>
     </form>
+  );
+};
+
+const NameField: React.FC<{ form: FormApi<IContact, undefined> }> = ({
+  form,
+}) => {
+  const field = useField({ form, name: 'name' });
+  return (
+    <div>
+      <label className="block text-gray-700 mb-1">Name</label>
+      <input
+        type="text"
+        value={field.state.value}
+        onChange={(e) => field.handleChange(e.target.value)}
+        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      {field.state.meta.errors?.[0] && (
+        <span className="text-red-500 text-sm">
+          {field.state.meta.errors[0]}
+        </span>
+      )}
+    </div>
+  );
+};
+
+const UsernameField: React.FC<{ form: FormApi<IContact, undefined> }> = ({
+  form,
+}) => {
+  const field = useField({ form, name: 'username' });
+  return (
+    <div>
+      <label className="block text-gray-700 mb-1">Username</label>
+      <input
+        type="text"
+        value={field.state.value}
+        onChange={(e) => field.handleChange(e.target.value)}
+        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      {field.state.meta.errors?.[0] && (
+        <span className="text-red-500 text-sm">
+          {field.state.meta.errors[0]}
+        </span>
+      )}
+    </div>
+  );
+};
+
+const DescriptionField: React.FC<{ form: FormApi<IContact, undefined> }> = ({
+  form,
+}) => {
+  const field = useField({ form, name: 'description' });
+  return (
+    <div>
+      <label className="block text-gray-700 mb-1">Description</label>
+      <textarea
+        value={field.state.value}
+        onChange={(e) => field.handleChange(e.target.value)}
+        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      {field.state.meta.errors?.[0] && (
+        <span className="text-red-500 text-sm">
+          {field.state.meta.errors[0]}
+        </span>
+      )}
+    </div>
+  );
+};
+
+const ProfilePictureField: React.FC<{ form: FormApi<IContact, undefined> }> = ({
+  form,
+}) => {
+  const field = useField({ form, name: 'profilePicture' });
+  return (
+    <div>
+      <label className="block text-gray-700 mb-1">Profile Picture URL</label>
+      <input
+        type="text"
+        value={field.state.value}
+        onChange={(e) => field.handleChange(e.target.value)}
+        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      {field.state.meta.errors?.[0] && (
+        <span className="text-red-500 text-sm">
+          {field.state.meta.errors[0]}
+        </span>
+      )}
+    </div>
   );
 };
 
