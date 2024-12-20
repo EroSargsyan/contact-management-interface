@@ -4,7 +4,7 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 import { IContact } from '../../types/contact';
 import { useContacts } from '../../hooks/ContactsContext';
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { createContact } from '../../services/contactsService';
 
 const contactSchema = z.object({
@@ -19,13 +19,16 @@ const contactSchema = z.object({
 
 const CreateContactForm = () => {
   const { contacts, setContacts } = useContacts();
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/' });
 
   const mutation = useMutation<IContact, Error, Omit<IContact, 'id'>>({
     mutationFn: createContact,
     onSuccess: (data) => {
       setContacts([...contacts, data]);
-      navigate(`/contacts/${data.id}`);
+
+      navigate({
+        to: `/contact/${data.id}`,
+      });
     },
     onError: (error) => {
       console.error('Failed to create contact:', error);

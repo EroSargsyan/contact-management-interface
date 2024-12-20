@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { IContact } from '../../types/contact';
+import { useNavigate } from '@tanstack/react-router';
 
 interface ContactListProps {
   contacts: IContact[];
@@ -11,7 +11,7 @@ const ContactList: React.FC<ContactListProps> = ({ contacts }) => {
     null,
   );
 
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/' });
 
   return (
     <ul className="space-y-2">
@@ -20,7 +20,9 @@ const ContactList: React.FC<ContactListProps> = ({ contacts }) => {
           key={contact.id}
           onClick={() => {
             setSelectedContactId(contact.id);
-            navigate(`/contacts/${contact.id}`);
+            navigate({
+              to: `/contact/${contact.id}`,
+            });
           }}
           className={`p-3 rounded-lg cursor-pointer transition flex items-center space-x-3 ${
             selectedContactId === contact.id

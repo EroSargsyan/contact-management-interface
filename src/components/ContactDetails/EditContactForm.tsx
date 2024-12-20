@@ -1,8 +1,8 @@
-import { useParams, useNavigate } from 'react-router-dom';
 import { useForm, useField, FormApi } from '@tanstack/react-form';
 import { z } from 'zod';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useContacts } from '../../hooks/ContactsContext';
 import { IContact } from '../../types/contact';
 import { updateContact } from '../../services/contactsService';
@@ -17,10 +17,9 @@ const contactSchema = z.object({
     .optional(),
 });
 
-const EditContactForm: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const EditContactForm = ({ id }: { id: string }) => {
   const { contacts, setContacts } = useContacts();
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/contact/$id/edit' });
 
   const contactToEdit = contacts.find((contact: IContact) => contact.id === id);
 
@@ -29,7 +28,9 @@ const EditContactForm: React.FC = () => {
       updateContact(updatedContact.id, updatedContact),
     onSuccess: (data) => {
       setContacts(contacts.map((c) => (c.id === data.id ? data : c)));
-      navigate(`/contacts/${data.id}`);
+      navigate({
+        to: `/contact/${data.id}`,
+      });
     },
     onError: (error) => {
       console.error('Failed to update contact:', error);
@@ -81,7 +82,11 @@ const EditContactForm: React.FC = () => {
       <div className="flex justify-end space-x-4">
         <button
           type="button"
-          onClick={() => navigate(`/contacts/${id}`)}
+          onClick={() =>
+            navigate({
+              to: `/contact/${id}`,
+            })
+          }
           className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition focus:outline-none"
         >
           Cancel
