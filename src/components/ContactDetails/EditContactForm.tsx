@@ -61,7 +61,7 @@ const EditContactForm: React.FC = () => {
     },
     validatorAdapter: zodValidator(),
     validators: {
-      onChange: contactSchema,
+      onSubmit: contactSchema,
     },
   });
 

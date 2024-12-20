@@ -58,7 +58,7 @@ const CreateContactForm = () => {
     },
     validatorAdapter: zodValidator(),
     validators: {
-      onChange: contactSchema,
+      onSubmit: contactSchema,
     },
   });
 
