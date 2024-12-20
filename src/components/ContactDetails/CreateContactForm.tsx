@@ -4,6 +4,7 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 import { IContact } from '../../types/contact';
 import { createContact } from '../../services/contactsService';
 import { useContacts } from '../../hooks/ContactsContext';
+import { useNavigate } from 'react-router-dom';
 
 const contactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -17,6 +18,7 @@ const contactSchema = z.object({
 
 const CreateContactForm = () => {
   const { contacts, setContacts } = useContacts();
+  const navigate = useNavigate();
 
   const form = useForm({
     defaultValues: {
@@ -42,6 +44,8 @@ const CreateContactForm = () => {
 
           if (response.status === 201) {
             setContacts([...contacts, response.data]);
+
+            navigate(`/contacts/${newContact.id}`);
           } else {
             console.error('Failed to add contact:', response);
           }
