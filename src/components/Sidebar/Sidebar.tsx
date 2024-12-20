@@ -36,14 +36,16 @@ const Sidebar = () => {
   }, [searchQuery, contacts]);
 
   return (
-    <div className="h-full w-full bg-white shadow-lg flex flex-col p-4 space-y-4">
+    <div className="h-full w-full bg-gray-50 shadow-lg flex flex-col p-4 space-y-6">
+      <h2 className="text-xl font-semibold text-gray-800">Contacts</h2>
+
       <SearchBar onSearch={setSearchQuery} />
 
       <button
         onClick={() => navigate('/create-contact')}
-        className="w-full bg-blue-500 text-white py-2 rounded-md shadow hover:bg-blue-600 transition"
+        className="w-full bg-blue-500 text-white py-2 rounded-lg shadow-md hover:bg-blue-600 transition focus:outline-none focus:ring focus:ring-blue-300"
       >
-        Create Contact
+        + Create Contact
       </button>
 
       <div className="flex-1 overflow-y-auto">
