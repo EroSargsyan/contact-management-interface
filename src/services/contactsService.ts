@@ -34,7 +34,7 @@ export const createContact = async (contact: Omit<IContact, 'id'>) => {
   }
 };
 
-export const deleteContact = async (id: number): Promise<void> => {
+export const deleteContact = async (id: string): Promise<void> => {
   await axios.delete(`${API_URL}/${id}`);
 };
 

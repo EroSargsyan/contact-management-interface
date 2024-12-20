@@ -35,8 +35,10 @@ const ContactDetailsPage: React.FC = () => {
     if (!id) return;
 
     try {
-      await deleteContact(Number(id));
+      await deleteContact(id);
+
       setContacts(contacts.filter((contact) => contact.id !== id));
+
       navigate('/');
     } catch (error) {
       console.error('Failed to delete contact:', error);
