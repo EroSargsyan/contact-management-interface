@@ -33,3 +33,7 @@ export const createContact = async (contact: Omit<IContact, 'id'>) => {
     throw error;
   }
 };
+
+export const deleteContact = async (id: number): Promise<void> => {
+  await axios.delete(`${API_URL}/${id}`);
+};
