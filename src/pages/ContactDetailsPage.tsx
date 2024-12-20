@@ -44,6 +44,13 @@ const ContactDetailsPage: React.FC = () => {
     }
   };
 
+  const handleEdit = () => {
+    if (!id) {
+      return;
+    }
+    navigate(`/contacts/${id}/edit`);
+  };
+
   if (error) {
     return <div className="text-red-500 text-center">{error}</div>;
   }
@@ -70,12 +77,20 @@ const ContactDetailsPage: React.FC = () => {
       <p className="mt-4 text-gray-600">
         {contact.description || 'No description available.'}
       </p>
-      <button
-        onClick={handleDelete}
-        className="mt-6 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition w-full"
-      >
-        Delete Contact
-      </button>
+      <div className="mt-6 flex space-x-4">
+        <button
+          onClick={handleEdit}
+          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition flex-1"
+        >
+          Edit Contact
+        </button>
+        <button
+          onClick={handleDelete}
+          className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition flex-1"
+        >
+          Delete Contact
+        </button>
+      </div>
     </div>
   );
 };
