@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useForm, useField, FormApi } from '@tanstack/react-form';
 import { z } from 'zod';
 import { zodValidator } from '@tanstack/zod-form-adapter';
+import { useMutation } from '@tanstack/react-query';
 import { useContacts } from '../../hooks/ContactsContext';
 import { IContact } from '../../types/contact';
 import { updateContact } from '../../services/contactsService';
@@ -23,6 +24,18 @@ const EditContactForm: React.FC = () => {
 
   const contactToEdit = contacts.find((contact: IContact) => contact.id === id);
 
+  const mutation = useMutation<IContact, Error, IContact>({
+    mutationFn: (updatedContact) =>
+      updateContact(updatedContact.id, updatedContact),
+    onSuccess: (data) => {
+      setContacts(contacts.map((c) => (c.id === data.id ? data : c)));
+      navigate(`/contacts/${data.id}`);
+    },
+    onError: (error) => {
+      console.error('Failed to update contact:', error);
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       name: contactToEdit?.name || '',
@@ -31,30 +44,17 @@ const EditContactForm: React.FC = () => {
       profilePicture: contactToEdit?.profilePicture || '',
     } as IContact,
 
-    onSubmit: async (formState) => {
+    onSubmit: (formState) => {
       const { value } = formState;
       const validation = contactSchema.safeParse(value);
 
       if (validation.success && contactToEdit) {
-        try {
-          const updatedContact: IContact = {
-            ...value,
-            id: contactToEdit.id,
-          };
+        const updatedContact: IContact = {
+          ...value,
+          id: contactToEdit.id,
+        };
 
-          const response = await updateContact(
-            contactToEdit.id,
-            updatedContact,
-          );
-
-          setContacts(
-            contacts.map((c) => (c.id === response.id ? response : c)),
-          );
-
-          navigate(`/contacts/${response.id}`);
-        } catch (error) {
-          console.error('Failed to update contact:', error);
-        }
+        mutation.mutate(updatedContact);
       } else {
         console.error('Validation Errors:', validation.error);
       }
@@ -73,7 +73,7 @@ const EditContactForm: React.FC = () => {
       }}
       className="bg-white p-6 rounded-lg shadow-lg space-y-6 w-full"
     >
-      <h2 className="text-xl font-semibold text-gray-800">Contact Details</h2>
+      <h2 className="text-xl font-semibold text-gray-800">Edit Contact</h2>
       <NameField form={form} />
       <UsernameField form={form} />
       <DescriptionField form={form} />
