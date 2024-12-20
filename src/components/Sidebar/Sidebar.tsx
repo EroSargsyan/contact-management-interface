@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import ContactList from './ContactList';
 import { fetchContacts } from '../../services/contactsService';
 import { IContact } from '../../types/contact';
 import { useContacts } from '../../hooks/ContactsContext';
+import { useNavigate } from '@tanstack/react-router';
 
 const Sidebar = () => {
   const { contacts, setContacts } = useContacts();
@@ -12,7 +12,7 @@ const Sidebar = () => {
   const [filteredContacts, setFilteredContacts] = useState<IContact[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/' });
 
   useEffect(() => {
     const loadContacts = async () => {
@@ -42,7 +42,11 @@ const Sidebar = () => {
       <SearchBar onSearch={setSearchQuery} />
 
       <button
-        onClick={() => navigate('/create-contact')}
+        onClick={() =>
+          navigate({
+            to: '/create-contact',
+          })
+        }
         className="w-full bg-blue-500 text-white py-2 rounded-lg shadow-md hover:bg-blue-600 transition focus:outline-none focus:ring focus:ring-blue-300"
       >
         + Create Contact
