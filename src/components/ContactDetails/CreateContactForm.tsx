@@ -2,9 +2,10 @@ import { useForm, useField, FormApi } from '@tanstack/react-form';
 import { z } from 'zod';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { IContact } from '../../types/contact';
-import { createContact } from '../../services/contactsService';
 import { useContacts } from '../../hooks/ContactsContext';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { createContact } from '../../services/contactsService';
 
 const contactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -20,6 +21,17 @@ const CreateContactForm = () => {
   const { contacts, setContacts } = useContacts();
   const navigate = useNavigate();
 
+  const mutation = useMutation<IContact, Error, Omit<IContact, 'id'>>({
+    mutationFn: createContact,
+    onSuccess: (data) => {
+      setContacts([...contacts, data]);
+      navigate(`/contacts/${data.id}`);
+    },
+    onError: (error) => {
+      console.error('Failed to create contact:', error);
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       name: '',
@@ -27,31 +39,12 @@ const CreateContactForm = () => {
       description: '',
       profilePicture: 'https://via.placeholder.com/150',
     } as IContact,
-    onSubmit: async (formState) => {
+    onSubmit: (formState) => {
       const { value } = formState;
       const validation = contactSchema.safeParse(value);
 
       if (validation.success) {
-        const newContact: IContact = {
-          ...value,
-          description: value.description || '',
-          profilePicture: value.profilePicture || '',
-          id: String(Date.now()),
-        };
-
-        try {
-          const response = await createContact(newContact);
-
-          if (response.status === 201) {
-            setContacts([...contacts, response.data]);
-
-            navigate(`/contacts/${newContact.id}`);
-          } else {
-            console.error('Failed to add contact:', response);
-          }
-        } catch (error) {
-          console.error('Error while adding contact:', error);
-        }
+        mutation.mutate(value);
       } else {
         console.error('Validation Errors:', validation.error.errors);
       }
