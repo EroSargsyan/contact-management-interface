@@ -1,10 +1,24 @@
 {
   "users": [
     {
-      "id": 1,
-      "name": "John Doe",
-      "username": "johndoe",
-      "description": "Software Developer",
+      "name": "JOHN",
+      "username": "DOE",
+      "description": "DESCRIPTION",
+      "profilePicture": "https://yt3.googleusercontent.com/K8WVrQAQHTTwsHEtisMYcNai7p7XIlyEAdZg86qYw78ye57r5DRemHQ9Te4PcD_v98HB-ZvQjQ=s900-c-k-c0x00ffffff-no-rj",
+      "id": "1734702733458"
+    },
+    {
+      "name": "NotJohnnyDepp",
+      "username": "Username",
+      "description": "DESCRIPTION",
+      "profilePicture": "https://m.media-amazon.com/images/M/MV5BZjA3NzZiZDktZjc2My00MzY2LThhOWMtZGFjYzg4ZDI2ZWVmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+      "id": "e304644"
+    },
+    {
+      "id": "9d89",
+      "name": "John",
+      "username": "Smith",
+      "description": "",
       "profilePicture": "https://via.placeholder.com/150"
     }
   ]
