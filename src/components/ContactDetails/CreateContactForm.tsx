@@ -2,8 +2,8 @@ import { useForm, useField, FormApi } from '@tanstack/react-form';
 import { z } from 'zod';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { IContact } from '../../types/contact';
-import { useNavigate } from 'react-router-dom';
 import { createContact } from '../../services/contactsService';
+import { useContacts } from '../../hooks/ContactsContext';
 
 const contactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -16,7 +16,7 @@ const contactSchema = z.object({
 });
 
 const CreateContactForm = () => {
-  const navigate = useNavigate();
+  const { contacts, setContacts } = useContacts();
 
   const form = useForm({
     defaultValues: {
@@ -41,7 +41,7 @@ const CreateContactForm = () => {
           const response = await createContact(newContact);
 
           if (response.status === 201) {
-            navigate(`/contacts/${response.data.id}`);
+            setContacts([...contacts, response.data]);
           } else {
             console.error('Failed to add contact:', response);
           }

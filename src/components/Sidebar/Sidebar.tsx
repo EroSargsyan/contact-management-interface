@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import ContactList from './ContactList';
 import { fetchContacts } from '../../services/contactsService';
 import { IContact } from '../../types/contact';
-import { useNavigate } from 'react-router-dom';
-
-
+import { useContacts } from '../../hooks/ContactsContext';
 
 const Sidebar = () => {
-  const [contacts, setContacts] = useState<IContact[]>([]);
+  const { contacts, setContacts } = useContacts();
+
   const [filteredContacts, setFilteredContacts] = useState<IContact[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -22,7 +22,7 @@ const Sidebar = () => {
     };
 
     loadContacts();
-  }, []);
+  }, [setContacts]);
 
   useEffect(() => {
     if (searchQuery === '') {
