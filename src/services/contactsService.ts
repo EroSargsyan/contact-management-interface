@@ -13,7 +13,7 @@ export const fetchContacts = async (): Promise<IContact[]> => {
   }
 };
 
-export const fetchContactDetails = async (id: number): Promise<IContact> => {
+export const fetchContactDetails = async (id: string): Promise<IContact> => {
   try {
     const response = await axios.get(`${API_URL}/${id}`);
     return response.data;
@@ -27,7 +27,7 @@ export const createContact = async (contact: Omit<IContact, 'id'>) => {
   try {
     const response = await axios.post(API_URL, contact);
 
-    return response;
+    return response.data;
   } catch (error) {
     console.error('Failed to create contact:', error);
     throw error;
