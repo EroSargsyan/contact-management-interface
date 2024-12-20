@@ -11,6 +11,7 @@ const ContactDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [contact, setContact] = useState<IContact | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const navigate = useNavigate();
   const { contacts, setContacts } = useContacts();
 
@@ -36,9 +37,7 @@ const ContactDetailsPage: React.FC = () => {
 
     try {
       await deleteContact(id);
-
       setContacts(contacts.filter((contact) => contact.id !== id));
-
       navigate('/');
     } catch (error) {
       console.error('Failed to delete contact:', error);
@@ -88,13 +87,37 @@ const ContactDetailsPage: React.FC = () => {
             Edit
           </button>
           <button
-            onClick={handleDelete}
+            onClick={() => setShowConfirmation(true)}
             className="bg-red-500 text-white py-3 px-6 rounded-lg hover:bg-red-600 transition w-full shadow-md text-base"
           >
             Delete
           </button>
         </div>
       </div>
+
+      {showConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg space-y-4">
+            <p className="text-lg text-gray-700">
+              Are you sure you want to delete this contact?
+            </p>
+            <div className="flex space-x-4 justify-end">
+              <button
+                onClick={() => setShowConfirmation(false)}
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+              >
+                No
+              </button>
+              <button
+                onClick={handleDelete}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
