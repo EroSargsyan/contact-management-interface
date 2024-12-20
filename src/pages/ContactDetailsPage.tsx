@@ -47,9 +47,7 @@ const ContactDetailsPage: React.FC = () => {
   };
 
   const handleEdit = () => {
-    if (!id) {
-      return;
-    }
+    if (!id) return;
     navigate(`/contacts/${id}/edit`);
   };
 
@@ -66,32 +64,36 @@ const ContactDetailsPage: React.FC = () => {
   }
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-md max-w-md mx-auto">
-      <div className="flex flex-col items-center">
-        <img
-          src={contact.profilePicture}
-          alt={contact.name}
-          className="w-24 h-24 rounded-full mb-4 object-cover"
-        />
-        <h2 className="text-xl font-bold text-gray-800">{contact.name}</h2>
-        <p className="text-gray-500">@{contact.username}</p>
-      </div>
-      <p className="mt-4 text-gray-600">
-        {contact.description || 'No description available.'}
-      </p>
-      <div className="mt-6 flex space-x-4">
-        <button
-          onClick={handleEdit}
-          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition flex-1"
-        >
-          Edit Contact
-        </button>
-        <button
-          onClick={handleDelete}
-          className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition flex-1"
-        >
-          Delete Contact
-        </button>
+    <div className="flex items-center justify-center h-screen">
+      <div className="p-6 bg-gradient-to-r from-gray-50 to-white shadow-lg rounded-lg w-full max-w-lg">
+        <div className="flex flex-col items-center">
+          <img
+            src={contact.profilePicture}
+            alt={contact.name}
+            className="w-24 h-24 rounded-full mb-6 object-cover border-2 border-gray-200 shadow-sm"
+          />
+          <h2 className="text-xl font-semibold text-gray-900">
+            {contact.name}
+          </h2>
+          <p className="text-sm text-gray-500 mt-1">@{contact.username}</p>
+        </div>
+        <p className="mt-6 text-gray-700 text-center">
+          {contact.description || 'No description available.'}
+        </p>
+        <div className="mt-8 flex space-x-4">
+          <button
+            onClick={handleEdit}
+            className="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition w-full shadow-md text-base"
+          >
+            Edit
+          </button>
+          <button
+            onClick={handleDelete}
+            className="bg-red-500 text-white py-3 px-6 rounded-lg hover:bg-red-600 transition w-full shadow-md text-base"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );
