@@ -1,7 +1,9 @@
 const Home: React.FC = () => {
   return (
-    <div className="flex h-screen w-screen bg-gray-100">
-      <p>Select one of the contacts</p>
+    <div className="flex items-center justify-center ">
+      <p className="text-lg text-gray-700 font-medium">
+        Select one of the contacts to view details
+      </p>
     </div>
   );
 };
