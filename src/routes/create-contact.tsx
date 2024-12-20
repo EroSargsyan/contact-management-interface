@@ -1,9 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
-import CreateContactForm from '../components/ContactDetails/CreateContactForm'
+import { createFileRoute } from '@tanstack/react-router';
+import CreateContactForm from '../components/forms/CreateContactForm';
 
 export const Route = createFileRoute('/create-contact')({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   return (
@@ -15,5 +15,5 @@ function RouteComponent() {
         <CreateContactForm />
       </div>
     </div>
-  )
+  );
 }
