@@ -8,7 +8,7 @@ import Home from '../pages/Home';
 import Layout from '../layouts/Layout';
 import CreateContactPage from '../pages/CreateContactPage';
 import ContactDetailsPage from '../pages/ContactDetailsPage';
-import EditContactPage from '../pages/EditContactPage';
+import EditContactPage from '../components/ContactDetails/EditContactForm';
 
 const AppRouter: React.FC = () => {
   return (
