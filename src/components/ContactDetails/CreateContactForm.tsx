@@ -68,19 +68,17 @@ const CreateContactForm = () => {
         e.preventDefault();
         form.handleSubmit();
       }}
-      className="bg-gray-50 p-4 rounded-md shadow-md space-y-4 w-full"
+      className="bg-white p-6 rounded-lg shadow-lg space-y-6"
     >
-      <h3 className="text-lg font-bold text-gray-800">Create Contact</h3>
-
+      <h3 className="text-xl font-semibold text-gray-800">Contact Details</h3>
       <NameField form={form} />
       <UsernameField form={form} />
       <DescriptionField form={form} />
       <ProfilePictureField form={form} />
-
       <div className="flex justify-end space-x-4">
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
         >
           Create
         </button>
