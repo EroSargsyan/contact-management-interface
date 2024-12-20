@@ -20,16 +20,21 @@ const ContactList: React.FC<ContactListProps> = ({ contacts }) => {
           key={contact.id}
           onClick={() => {
             setSelectedContactId(contact.id);
-
             navigate(`/contacts/${contact.id}`);
           }}
-          className={`p-2 rounded-md cursor-pointer transition ${
+          className={`p-3 rounded-lg cursor-pointer transition flex items-center space-x-3 ${
             selectedContactId === contact.id
-              ? 'bg-blue-100 text-blue-900'
+              ? 'bg-blue-100 text-blue-900 shadow-md'
               : 'hover:bg-gray-200'
           }`}
         >
-          {contact.name}
+          <img
+            src={contact.profilePicture || 'https://via.placeholder.com/50'}
+            alt={contact.name}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+
+          <span className="text-gray-800 font-medium">{contact.name}</span>
         </li>
       ))}
     </ul>
