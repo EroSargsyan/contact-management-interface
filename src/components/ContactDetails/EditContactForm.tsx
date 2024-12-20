@@ -71,9 +71,9 @@ const EditContactForm: React.FC = () => {
         e.preventDefault();
         form.handleSubmit();
       }}
-      className="p-6 bg-white shadow-md rounded-md max-w-md mx-auto"
+      className="bg-white p-6 rounded-lg shadow-lg space-y-6 w-full"
     >
-      <h2 className="text-xl font-bold text-gray-800 mb-4">Edit Contact</h2>
+      <h2 className="text-xl font-semibold text-gray-800">Contact Details</h2>
       <NameField form={form} />
       <UsernameField form={form} />
       <DescriptionField form={form} />
@@ -82,13 +82,13 @@ const EditContactForm: React.FC = () => {
         <button
           type="button"
           onClick={() => navigate(`/contacts/${id}`)}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+          className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition focus:outline-none"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-300"
         >
           Save
         </button>
@@ -108,7 +108,7 @@ const NameField: React.FC<{ form: FormApi<IContact, undefined> }> = ({
         type="text"
         value={field.state.value}
         onChange={(e) => field.handleChange(e.target.value)}
-        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       {field.state.meta.errors?.[0] && (
         <span className="text-red-500 text-sm">
