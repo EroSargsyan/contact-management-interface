@@ -7,23 +7,26 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": " npx json-server --watch db.json --port 3001"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@tanstack/react-form": "^0.40.4",
     "@tanstack/react-query": "^5.62.8",
-    "@tanstack/react-router": "^1.91.2",
+    "@tanstack/react-router": "^1.91.3",
     "@tanstack/zod-form-adapter": "^0.40.4",
     "axios": "^1.7.9",
     "json-server": "^1.0.0-beta.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.0.2",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
+    "@tanstack/router-cli": "^1.87.7",
+    "@tanstack/router-devtools": "^1.91.3",
+    "@tanstack/router-plugin": "^1.91.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
