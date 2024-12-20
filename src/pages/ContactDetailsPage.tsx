@@ -1,60 +1,55 @@
-import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   fetchContactDetails,
   deleteContact,
 } from '../services/contactsService';
-import { IContact } from '../types/contact';
 import { useContacts } from '../hooks/ContactsContext';
 
 const ContactDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [contact, setContact] = useState<IContact | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const navigate = useNavigate();
   const { contacts, setContacts } = useContacts();
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  useEffect(() => {
-    if (id) {
-      const loadContactDetails = async () => {
-        setError(null);
+  const {
+    isLoading,
+    error,
+    data: contact,
+  } = useQuery({
+    queryKey: ['contactDetails', id],
+    queryFn: () => fetchContactDetails(id!),
+    enabled: !!id,
+  });
 
-        try {
-          const data = await fetchContactDetails(Number(id));
-          setContact(data);
-        } catch {
-          setError('Failed to load contact details. Please try again.');
-        }
-      };
-
-      loadContactDetails();
-    }
-  }, [id]);
-
-  const handleDelete = async () => {
-    if (!id) return;
-
-    try {
-      await deleteContact(id);
-      setContacts(contacts.filter((contact) => contact.id !== id));
+  const mutation = useMutation({
+    mutationFn: (contactId: string) => deleteContact(contactId),
+    onSuccess: () => {
+      setContacts(contacts.filter((c) => c.id !== id));
       navigate('/');
-    } catch (error) {
-      console.error('Failed to delete contact:', error);
-      setError('Failed to delete contact. Please try again.');
+    },
+  });
+
+  const handleDelete = () => {
+    if (id) {
+      mutation.mutate(id);
     }
   };
 
-  const handleEdit = () => {
-    if (!id) return;
-    navigate(`/contacts/${id}/edit`);
-  };
-
-  if (error) {
-    return <div className="text-red-500 text-center">{error}</div>;
+  if (isLoading) {
+    return <div className="text-gray-500 text-center">Loading...</div>;
   }
 
-  if (!id || !contact) {
+  if (error instanceof Error) {
+    return (
+      <div className="text-red-500 text-center">
+        An error has occurred: {error.message}
+      </div>
+    );
+  }
+
+  if (!contact) {
     return (
       <div className="text-gray-500 text-center">
         Select a contact to view details.
@@ -81,7 +76,7 @@ const ContactDetailsPage: React.FC = () => {
         </p>
         <div className="mt-8 flex space-x-4">
           <button
-            onClick={handleEdit}
+            onClick={() => navigate(`/contacts/${id}/edit`)}
             className="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition w-full shadow-md text-base"
           >
             Edit
